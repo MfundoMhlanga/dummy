@@ -4,36 +4,36 @@ import numpy as np
 
 # Dummy data generation
 np.random.seed(42)
-dates_paid = pd.date_range(start='2023-07-01', periods=10).repeat(4)
-dates_seo = pd.date_range(start='2023-07-01', periods=10)
-dates_social = pd.date_range(start='2023-07-01', periods=5).repeat(4)
+dates_paid = pd.date_range(start='2023-01-01', periods=120, freq='D')
+dates_seo = pd.date_range(start='2023-01-01', periods=120, freq='D')
+dates_social = pd.date_range(start='2023-01-01', periods=120, freq='D')
 
 data = {
     'Date': dates_paid,
-    'Network': ['Twitter', 'Facebook', 'LinkedIn', 'Google Ads'] * 10,
-    'CPA': np.random.uniform(1, 5, 40),
-    'Impressions': np.random.randint(1000, 5000, 40),
-    'Clicks': np.random.randint(100, 500, 40),
-    'Conversions': np.random.randint(10, 100, 40)
+    'Network': np.random.choice(['Twitter', 'Facebook', 'LinkedIn', 'Google Ads'], size=120),
+    'CPA': np.random.uniform(1, 5, 120),
+    'Impressions': np.random.randint(1000, 5000, 120),
+    'Clicks': np.random.randint(100, 500, 120),
+    'Conversions': np.random.randint(10, 100, 120)
 }
 df_paid = pd.DataFrame(data)
 
 seo_data = {
     'Date': dates_seo,
-    'Keyword': ['SEO'] * 10,
-    'Clicks': np.random.randint(1000, 5000, 10),
-    'Impressions': np.random.randint(10000, 50000, 10),
-    'CTR': np.random.uniform(1, 10, 10),
-    'Average Position': np.random.uniform(1, 10, 10)
+    'Keyword': ['SEO'] * 120,
+    'Clicks': np.random.randint(1000, 5000, 120),
+    'Impressions': np.random.randint(10000, 50000, 120),
+    'CTR': np.random.uniform(1, 10, 120),
+    'Average Position': np.random.uniform(1, 10, 120)
 }
 df_seo = pd.DataFrame(seo_data)
 
 social_data = {
     'Date': dates_social,
-    'Platform': ['Twitter', 'Facebook', 'Instagram', 'LinkedIn'] * 5,
-    'Mentions': np.random.randint(100, 1000, 20),
-    'Sentiment': np.random.choice(['Positive', 'Neutral', 'Negative'], 20),
-    'Engagement': np.random.randint(1000, 5000, 20)
+    'Platform': np.random.choice(['Twitter', 'Facebook', 'Instagram', 'LinkedIn'], size=120),
+    'Mentions': np.random.randint(100, 1000, 120),
+    'Sentiment': np.random.choice(['Positive', 'Neutral', 'Negative'], 120),
+    'Engagement': np.random.randint(1000, 5000, 120)
 }
 df_social = pd.DataFrame(social_data)
 
@@ -113,13 +113,13 @@ if st.session_state.section == 'Paid Media Performance':
 
     st.header("Paid Media Metrics Visualization")
     st.subheader("Cost-Per-Acquisition (CPA)")
-    st.bar_chart(filtered_paid_df[['CPA']])
+    st.line_chart(filtered_paid_df[['Date', 'CPA']].set_index('Date'))
     st.subheader("Impressions")
-    st.line_chart(filtered_paid_df[['Impressions']])
+    st.line_chart(filtered_paid_df[['Date', 'Impressions']].set_index('Date'))
     st.subheader("Clicks")
-    st.area_chart(filtered_paid_df[['Clicks']])
+    st.line_chart(filtered_paid_df[['Date', 'Clicks']].set_index('Date'))
     st.subheader("Conversions")
-    st.line_chart(filtered_paid_df[['Conversions']])
+    st.line_chart(filtered_paid_df[['Date', 'Conversions']].set_index('Date'))
 
 if st.session_state.section == 'SEO Performance':
     st.header("SEO Performance")
@@ -165,13 +165,13 @@ if st.session_state.section == 'SEO Performance':
 
     st.header("SEO Metrics Visualization")
     st.subheader("Clicks")
-    st.bar_chart(df_seo[['Clicks']])
+    st.line_chart(df_seo[['Date', 'Clicks']].set_index('Date'))
     st.subheader("Impressions")
-    st.line_chart(df_seo[['Impressions']])
+    st.line_chart(df_seo[['Date', 'Impressions']].set_index('Date'))
     st.subheader("Click-Through Rate (CTR)")
-    st.area_chart(df_seo[['CTR']])
+    st.line_chart(df_seo[['Date', 'CTR']].set_index('Date'))
     st.subheader("Average Position")
-    st.line_chart(df_seo[['Average Position']])
+    st.line_chart(df_seo[['Date', 'Average Position']].set_index('Date'))
 
 if st.session_state.section == 'Social Listening Performance':
     st.header("Social Listening Performance")
@@ -218,9 +218,9 @@ if st.session_state.section == 'Social Listening Performance':
 
     st.header("Social Listening Metrics Visualization")
     st.subheader("Mentions")
-    st.bar_chart(filtered_social_df[['Mentions']])
+    st.line_chart(filtered_social_df[['Date', 'Mentions']].set_index('Date'))
     st.subheader("Engagement")
-    st.line_chart(filtered_social_df[['Engagement']])
+    st.line_chart(filtered_social_df[['Date', 'Engagement']].set_index('Date'))
     st.subheader("Sentiment Distribution")
-    sentiment_counts = filtered_social_df['Sentiment'].value_counts()
-    st.bar_chart(sentiment_counts)
+    sentiment_counts = filtered_social_df.groupby('Date')['Sentiment'].value_counts().unstack().fillna(0)
+    st.line_chart(sentiment_counts)
