@@ -4,7 +4,12 @@ import numpy as np
 
 # Dummy data generation
 np.random.seed(42)
+dates_paid = pd.date_range(start='2023-07-01', periods=10).repeat(4)
+dates_seo = pd.date_range(start='2023-07-01', periods=10)
+dates_social = pd.date_range(start='2023-07-01', periods=5).repeat(4)
+
 data = {
+    'Date': dates_paid,
     'Network': ['Twitter', 'Facebook', 'LinkedIn', 'Google Ads'] * 10,
     'CPA': np.random.uniform(1, 5, 40),
     'Impressions': np.random.randint(1000, 5000, 40),
@@ -14,6 +19,7 @@ data = {
 df_paid = pd.DataFrame(data)
 
 seo_data = {
+    'Date': dates_seo,
     'Keyword': ['SEO'] * 10,
     'Clicks': np.random.randint(1000, 5000, 10),
     'Impressions': np.random.randint(10000, 50000, 10),
@@ -23,6 +29,7 @@ seo_data = {
 df_seo = pd.DataFrame(seo_data)
 
 social_data = {
+    'Date': dates_social,
     'Platform': ['Twitter', 'Facebook', 'Instagram', 'LinkedIn'] * 5,
     'Mentions': np.random.randint(100, 1000, 20),
     'Sentiment': np.random.choice(['Positive', 'Neutral', 'Negative'], 20),
@@ -63,6 +70,7 @@ if st.session_state.section == 'Paid Media Performance':
     st.markdown("""
     This section shows the performance of your paid advertising campaigns across different networks. 
     Paid media includes ads on platforms like Twitter, Facebook, LinkedIn, and Google Ads. Key metrics include:
+    - **Date**: The date of the performance data.
     - **CPA (Cost-Per-Acquisition)**: The average cost to acquire a customer through the ads.
     - **Impressions**: The number of times your ads were seen.
     - **Clicks**: The number of times users clicked on your ads.
@@ -117,6 +125,7 @@ if st.session_state.section == 'SEO Performance':
     st.header("SEO Performance")
     st.markdown("""
     This section shows the performance of your SEO (Search Engine Optimization) efforts. SEO helps improve your website's visibility on search engines. Key metrics include:
+    - **Date**: The date of the performance data.
     - **Clicks**: The number of times users clicked on your website from search engine results.
     - **Impressions**: The number of times your website appeared in search engine results.
     - **CTR (Click-Through Rate)**: The percentage of impressions that resulted in clicks.
@@ -168,6 +177,7 @@ if st.session_state.section == 'Social Listening Performance':
     st.header("Social Listening Performance")
     st.markdown("""
     This section shows the performance of your social media presence and engagement. Social listening helps you monitor and analyze conversations about your brand on social media. Key metrics include:
+    - **Date**: The date of the performance data.
     - **Mentions**: The number of times your brand was mentioned on social media.
     - **Sentiment**: The overall sentiment (positive, neutral, negative) of the mentions.
     - **Engagement**: The number of interactions (likes, comments, shares) with your social media posts.
